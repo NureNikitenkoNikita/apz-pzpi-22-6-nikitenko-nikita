@@ -1,6 +1,16 @@
-apz-pzpi-22-6-nikitenko-nikita
+# Disaster Monitoring System
+
+## Group
 ПЗПІ-22-6
+
+## Author
 Нікітенко Нікіта
-Патерн Factory Method
-Архітектура Apache Kafka
-Програмна система для моніторингу природніх катастроф
+
+## Design Pattern
+Factory Method
+
+## Architecture
+Apache Kafka
+
+## Project Description
+Програмна система для моніторингу природних катастроф
