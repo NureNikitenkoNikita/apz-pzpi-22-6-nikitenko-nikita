@@ -1,5 +1,8 @@
 # Disaster Monitoring System
 
+## Initials
+apz-pzpi-22-6-nikitenko-nikita
+
 ## Group
 ПЗПІ-22-6
 
