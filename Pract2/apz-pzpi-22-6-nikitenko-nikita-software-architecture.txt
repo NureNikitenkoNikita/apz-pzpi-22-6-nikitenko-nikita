@@ -1,1 +1,250 @@
- 
+МІНІСТЕРСТВО ОСВІТИ ТА НАУКИ УКРАЇНИ
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+
+Кафедра Програмної інженерії
+
+
+
+ЗВІТ
+З дисципліни «Архітектура програмного забезпечення»
+З практичної роботи №2
+На тему: «Архітектура Apache Kafka»
+
+Виконав: 										   Перевірив:
+Ст. гр. ПЗПІ-22-6 							      Ст. вик. каф. ПІ
+Нікітенко Н.Ю 								        Сокорчук І. П.
+
+
+Харків 2025
+1 ІСТОРІЯ ЗМІН
+Зміни звіту наведені у таблиці 1.1
+Таблиця 1.1 – Історія змін
+№	Дата	Версія звіту	Опис змін
+1	01.06.2025	0.1	Створено розділ «Історія змін»
+2	01.06.2025	0.1	Створено розділ «Завдання»
+3	01.06.2025	0.1	Створено розділ “Опис виконаної роботи”
+4	01.06.2025	0.1	Створено розділ “Висновки”
+
+
+
+2 ЗАВДАННЯ
+
+
+Підготувати доповідь про архітектуру однієї з відомих складних програмних систем. 
+Створити та оформити слайди презентації доповіді.
+Створити та опублікувати на YouTube відеозапис доповіді.
+Оформити та звантажити на  dl.nure.ua звіт до виконаної роботи.
+При потребі створити та налаштувати у GitHub обліковий запис для облікового запису студента в домені @nure.ua.
+Створити для виконання завдань з дисципліни GitHub репозиторій iз вказаним на https://dl.nure.ua іменем та з головною гілкою main.
+Створити у корені створеного репозиторію файл README.md з вказаним далі змістом та вказані далі директорії для окремих завдань.
+Експортувати звіт у файл у простому текстовому форматі та завантажити цей файл у директорію Pract2 у репозиторії GitHub.
+Завантажити у вказану далі піддиректорію увесь програмний код, який розглядається у доповіді ПЗ2.
+
+
+3 ОПИС ВИКОНАНОЇ РОБОТИ
+Вступ до Apache Kafka
+- Визначення: Apache Kafka — це розподілена платформа для обробки потоків даних у реальному часі.
+- Призначення: Обробка великих обсягів даних, забезпечення масштабованості, стійкості до відмов і низької затримки.
+- Сфери застосування:
+  - Логування подій.
+  - Потокова аналітика.
+  - Інтеграція мікросервісів.
+- Джерело: Офіційна документація Apache Kafka (kafka.apache.org).
+
+Основні компоненти архітектури
+- Брокери (Brokers): Сервери, що зберігають і обробляють повідомлення.
+- Топи (Topics): Категорії для організації повідомлень.
+- Розділи (Partitions): Поділ топіків для паралельної обробки.
+- Продюсери (Producers): Відправляють повідомлення до топіків.
+- Споживачі (Consumers): Читають повідомлення з топіків.
+- ZooKeeper: Координує розподілену роботу брокерів.
+
+Архітектурна модель Kafka
+- Розподілена архітектура: Кластер брокерів для масштабування.
+- Модель «публікація-підписка» (Pub/Sub): Продюсери публікують, споживачі підписуються.
+- Лог повідомлень: Дані зберігаються у вигляді впорядкованого логу.
+- Реплікація: Кожен розділ має репліки для забезпечення стійкості до відмов.
+- Схема:
+  - Продюсер → Топік (Розділи + Репліки) → Споживач.
+
+Масштабованість і стійкість
+- Горизонтальне масштабування: Додавання нових брокерів до кластера.
+- Реплікація: Лідер і послідовники для кожного розділу.
+- Стійкість до відмов: Автоматичне перепризначення лідера у разі збою.
+- Продуктивність:
+  - Пропускна здатність: до мільйонів повідомлень за секунду.
+  - Низька затримка: ~2 мс для малих повідомлень.
+
+Приклад 1: Налаштування продюсера
+- Опис: Код для відправлення повідомлень до топіка Kafka.
+import org.apache.kafka.clients.producer.*;
+import java.util.Properties;
+
+public class SimpleProducer {
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+        Producer<String, String> producer = new KafkaProducer<>(props);
+        ProducerRecord<String, String> record = new ProducerRecord<>("my-topic", "key", "value");
+        producer.send(record);
+        producer.close();
+    }
+}
+
+Приклад 2: Налаштування споживача
+- Опис: Код для читання повідомлень із топіка Kafka.
+import org.apache.kafka.clients.consumer.*;
+import java.util.Collections;
+import java.util.Properties;
+
+public class SimpleConsumer {
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("group.id", "test-group");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+        Consumer<String, String> consumer = new KafkaConsumer<>(props);
+        consumer.subscribe(Collections.singletonList("my-topic"));
+        while (true) {
+            ConsumerRecords<String, String> records = consumer.poll(100);
+            for (ConsumerRecord<String, String> record : records) {
+                System.out.printf("key=%s, value=%s%n", record.key(), record.value());
+            }
+        }
+    }
+}
+
+Приклад 3: Створення топіка
+- Опис: Код для створення топіка з кількома розділами та репліками.
+import org.apache.kafka.clients.admin.*;
+import java.util.Collections;
+import java.util.Properties;
+
+public class TopicCreator {
+    public static void main(String[] args) throws Exception {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        AdminClient admin = AdminClient.create(props);
+
+        NewTopic newTopic = new NewTopic("my-topic", 3, (short) 2);
+        admin.createTopics(Collections.singletonList(newTopic)).all().get();
+        admin.close();
+    }
+}
+
+Переваги та недоліки Kafka
+- Переваги:
+  - Висока пропускна здатність і низька затримка.
+  - Масштабованість і стійкість до відмов.
+  - Гнучкість у обробці потоків даних.
+- Недоліки:
+  - Складність налаштування та адміністрування.
+  - Залежність від ZooKeeper (до версії 3.0).
+  - Високе споживання ресурсів для великих кластерів.
+
+Практичні сценарії використання
+- Логування: Збір логів із розподілених систем (наприклад, Netflix).
+- Потокова аналітика: Обробка даних у реальному часі (Uber, LinkedIn).
+- Інтеграція мікросервісів: Асинхронний обмін даними між сервісами.
+- Приклад: Обробка даних із IoT-пристроїв для аналізу в реальному часі.
+
+Висновки
+- Apache Kafka — потужна платформа для обробки потоків даних із розподіленою архітектурою.
+- Забезпечує високу продуктивність, масштабування та стійкість до відмов.
+- Підходить для складних систем із великими обсягами даних, але потребує ретельного налаштування.
+
+Джерела
+- Офіційна документація Apache Kafka: https://kafka.apache.org/documentation/.
+- Гамма Е., Хелм Р., Джонсон Р., Влісідес Дж. «ООП. Патерни проєктування». 
+
+
+Додаток А
+Посилання на відео та хронологічний опис
+
+Відеозапис доповіді на YouTube: https://youtu.be/5u4N1H5nAUU
+Хронологічний опис доповіді:
+00:01 -  Початок
+00:18 - Що таке Apache Kafka?
+00:34 - Сфери застосування
+00:42 - Основні компоненти архітектури
+01:07-  Архітектурна модель Kafka
+01:41 - Масштабованість і стійкість
+01:51 - Приклад: Налаштування продюсеру
+02:10 - Приклад: Налаштування споживача
+02:17 -  Приклад: Створення топіка
+02:27 - Переваги Kafka
+02:39 - Недоліки Kafka
+02:53 - Практичні сценарії використання
+03:17 - Висновки
+
+
+Додаток Б
+Приклад 1: Налаштування продюсера
+- Опис: Код для відправлення повідомлень до топіка Kafka.
+import org.apache.kafka.clients.producer.*;
+import java.util.Properties;
+
+public class SimpleProducer {
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+        Producer<String, String> producer = new KafkaProducer<>(props);
+        ProducerRecord<String, String> record = new ProducerRecord<>("my-topic", "key", "value");
+        producer.send(record);
+        producer.close();
+    }
+}
+
+
+Приклад 2: Налаштування споживача
+- Опис: Код для читання повідомлень із топіка Kafka.
+import org.apache.kafka.clients.consumer.*;
+import java.util.Collections;
+import java.util.Properties;
+
+public class SimpleConsumer {
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("group.id", "test-group");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+        Consumer<String, String> consumer = new KafkaConsumer<>(props);
+        consumer.subscribe(Collections.singletonList("my-topic"));
+        while (true) {
+            ConsumerRecords<String, String> records = consumer.poll(100);
+            for (ConsumerRecord<String, String> record : records) {
+                System.out.printf("key=%s, value=%s%n", record.key(), record.value());
+            }
+        }
+    }
+}
+
+
+Приклад 3: Створення топіка
+- Опис: Код для створення топіка з кількома розділами та репліками.
+import org.apache.kafka.clients.admin.*;
+import java.util.Collections;
+import java.util.Properties;
+
+public class TopicCreator {
+    public static void main(String[] args) throws Exception {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        AdminClient admin = AdminClient.create(props);
+
+        NewTopic newTopic = new NewTopic("my-topic", 3, (short) 2);
+        admin.createTopics(Collections.singletonList(newTopic)).all().get();
+        admin.close();
+    }
+}
