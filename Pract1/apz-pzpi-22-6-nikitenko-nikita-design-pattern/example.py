@@ -1,67 +1,99 @@
-1  class Product:
-2      def operation(self):
-3          pass
-4  
-5  class ConcreteProductA(Product):
-6      def operation(self):
-7          return "Результат продукту A"
-8  
-9  class ConcreteProductB(Product):
-10     def operation(self):
-11         return "Результат продукту B"
-12 
-13 class Creator:
-14     def factory_method(self):
-15         pass
-16 
-17     def some_operation(self):
-18         product = self.factory_method()
-19         return f"Creator: {product.operation()}"
-20 
-21 class ConcreteCreatorA(Creator):
-22     def factory_method(self):
-23         return ConcreteProductA()
-24 
-25 class ConcreteCreatorB(Creator):
-26     def factory_method(self):
-27         return ConcreteProductB()
-28 
-29 # Використання
-30 creator_a = ConcreteCreatorA()
-31 print(creator_a.some_operation())  # Виведе: Creator: Результат продукту A
-32 creator_b = ConcreteCreatorB()
-33 print(creator_b.some_operation())  # Виведе: Creator: Результат продукту B
+// Абстракція Реалізації (Implementor)
+class DrawingAPI {
+    draw(shape, details) { /* ... */ }
+}
+
+// Конкретні Реалізації
+class ConsoleDrawingAPI extends DrawingAPI {
+    draw(shape, details) { console.log(`Малюємо в консолі: ${shape} ${JSON.stringify(details)}`); }
+}
+class CanvasDrawingAPI extends DrawingAPI {
+    draw(shape, details) { console.log(`Малюємо на полі: ${shape} ${JSON.stringify(details)}`); }
+}
+
+// Абстракція
+class Shape {
+    constructor(api) { this.drawingAPI = api; }
+    draw() { /* ... */ }
+}
+
+// Уточнена Абстракція
+class Circle extends Shape {
+    constructor(api) { super(api); this.details = { radius: 50 }; }
+    draw() { return this.drawingAPI.draw('Коло', this.details); }
+}
+
+// Використання
+const circleOnConsole = new Circle(new ConsoleDrawingAPI());
+circleOnConsole.draw(); // Малюємо в консолі: Коло {"radius":50}
+const circleOnCanvas = new Circle(new CanvasDrawingAPI());
+circleOnCanvas.draw();   // Малюємо на полі: Коло {"radius":50}
 
 
 
+// Абстракція Реалізації (Implementor)
+class Device {
+    enable() { /* ... */ }
+    disable() { /* ... */ }
+}
 
-class Subject:
-    def __init__(self):
-        self._observers = []
-    def attach(self, observer):
-        self._observers.append(observer)
-    def notify(self):
-        for observer in self._observers:
-            observer.update()
+// Конкретні Реалізації
+class Tv extends Device {
+    enable() { console.log("TV: Увімкнено."); }
+    disable() { console.log("TV: Вимкнено."); }
+}
+class Radio extends Device {
+    enable() { console.log("Радіо: Увімкнено."); }
+    disable() { console.log("Радіо: Вимкнено."); }
+}
 
-class Observer:
-    def update(self):
-        pass
+// Абстракція
+class RemoteControl {
+    constructor(device) { this.device = device; }
+    togglePower() { /* ... */ }
+}
+
+// Уточнена Абстракція
+class BasicRemote extends RemoteControl {
+    togglePower() { console.log("Базовий пульт: Перемикання живлення."); this.device.enable(); } // Спрощено
+}
+
+// Використання
+const tv = new Tv();
+const radio = new Radio();
+const tvRemote = new BasicRemote(tv);
+tvRemote.togglePower(); // Базовий пульт: Перемикання живлення. TV: Увімкнено.
+const radioRemote = new BasicRemote(radio);
+radioRemote.togglePower(); // Базовий пульт: Перемикання живлення. Радіо: Увімкнено.
 
 
 
-        class Product:
-    def operation(self):
-        pass
+// Абстракція Реалізації (Implementor)
+class MessageSender {
+    send(message) { /* ... */ }
+}
 
-class ConcreteProductA(Product):
-    def operation(self):
-        return "Результат продукту A"
+// Конкретні Реалізації
+class EmailSender extends MessageSender {
+    send(message) { console.log(`Відправлено Email: "${message}"`); }
+}
+class SmsSender extends MessageSender {
+    send(message) { console.log(`Відправлено SMS: "${message}"`); }
+}
 
-class Creator:
-    def factory_method(self):
-        pass
+// Абстракція
+class Notification {
+    constructor(sender) { this.sender = sender; }
+    send(text) { /* ... */ }
+}
 
-class ConcreteCreatorA(Creator):
-    def factory_method(self):
-        return ConcreteProductA()
+// Уточнена Абстракція (в даному випадку просто Notification, що є і Абстракцією, і Уточненою)
+class SimpleNotification extends Notification {
+    send(text) { console.log("Сповіщення:"); this.sender.send(text); }
+}
+
+// Використання
+const emailNotif = new SimpleNotification(new EmailSender());
+emailNotif.send("Привіт, це тестове повідомлення."); // Сповіщення: Відправлено Email: "Привіт, це тестове повідомлення."
+const smsNotif = new SimpleNotification(new SmsSender());
+smsNotif.send("Нове оновлення!"); // Сповіщення: Відправлено SMS: "Нове оновлення!"
