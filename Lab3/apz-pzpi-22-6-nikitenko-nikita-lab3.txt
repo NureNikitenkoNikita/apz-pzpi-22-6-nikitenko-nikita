@@ -1,1 +1,247 @@
- 
+﻿ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+Кафедра «Програмної інженерії»
+Звіт
+з лабораторної роботи №3
+з дисципліни «Архітектура програмного забезпечення»
+
+Виконав:
+ст.гр. ПЗПІ-22-6 
+Нікітенко Нікіта Юрійович
+
+Перевірив роботу:
+ст. викладач катедри ПІ
+Сокорчук Ігор Петрович
+
+
+
+1 ІСТОРІЯ ЗМІН
+
+
+№
+	Дата
+	Версія звіту
+	Опис змін
+	1
+	27.05.2025
+	0.1
+	Створено розділ “Історія змін”
+	2
+	27.05.2025
+	0.1
+	Створено розділ “Завдання”
+	3
+	27.05.2025
+	0.1
+	Створено розділ “Опис виконаної роботи”
+	4
+	27.05.2025
+	0.1
+	Створено розділ “Висновки”
+	5
+	01.06.2025
+	0.2
+	Доданий Додаток А
+	6
+	01.06.2025
+	0.2
+	Доданий Додаток Б
+	7
+	01.06.2025
+	0.2
+	Доданий Додаток В
+	
+
+
+2 ЗАВДАННЯ
+Необхідно розробити клієнтську / front-end частину програмної системи.
+Проаналізуйте завдання.
+Виконайте контрольні завдання.
+Відкрийте створений на попередній лабораторній роботі репозиторій GitHub.
+Створіть у репозиторії директорію Task4 та текстовий файл з описом інженерних рішень у цій частині проєкту, як вказано у додатку З
+Зафіксуйте кожну внесену зміну командою git commit з відповідним коментарем та фіксуйте цією командою усі наступні зміни у проєкті.
+Створіть у директорії Task4 піддиректорію для програмного коду, як вказано у додатку З
+Створіть програмний код, завантажте його у створену піддиректорію, зафіксуйте внесені у репозиторій зміни
+Виконайте функціональне тестування створеного програмного коду та створіть відеозапис цього тестування тривалістю 7..10 хвилин з усними поясненнями процесу тестування
+Завантажте створений відеозапис тестування YouTube канал для вашого облікового запису в домені @nure.ua
+Створіть для завантаженого запису його хронологічний опис.
+Оформіть звіт у форматі pdf та завантажте його на навчальну платформу https://dl.nure.ua/
+У коментарях до завантаженого звіту вкажіть посилання на відеозапис тестування у вашому каналі YouTube.
+
+
+
+3 ОПИС ВИКОНАНОЇ РОБОТИ
+Програмне забезпечення клієнтською/front-end частини розроблено на мові програмування Javascript та з використанням фреймворку ReactJS, бібліотек React-MaterialUI для дизайну в стилі Material, Zustand для збереження та управління станом вебдодатку, react-router-dom для динамічного управління сторінками на основі url. Програмне забезпечення отримує користувацькі пристрої, їх вимірювання, прогнози погоди, та різні дані системи (користувачі, міста, тощо) для адміністраторів з серверу. Автентифікація реалізована за допомогою JWT-токенів, які перевіряються а сервері при кожному запиті.
+На рисунку Б.1 у додатку Б наведена UML діаграма прецедентів.
+На рисунку Б.2 у додатку Б наведена діаграма компонентів.
+На рисунку Б.3 у додатку Б наведена діаграма взаємодії.
+На рисунку Б.4 у додатку Б наведена діаграма станів.
+
+
+4 ВИСНОВКИ
+Під час виконання лабораторної роботи було розроблено клієнтську / front-end частину програмної системи.
+
+Додаток А
+Посилання на відео та хронологічний опис
+
+
+https://youtu.be/3_oXg4pZDks
+
+
+00:17 - Реєстрація користувача
+00:25 - Авторизація користувача
+00:33 - Інтерактивна мапа
+01:04 - Перегляд катастрофи з списку
+01:13 - Відомість катастрофи
+01:30 - Перегляд катастрофи на мапі
+01:35 - Відомість катастрофи
+01:54 - Зміна вигляду мапи
+02:06 - Зміна фільтру сортування
+02:11 - Зміна фільтру відображення катастроф
+02:21 - Перегляд фільтрованих катастроф на мапі
+
+
+
+
+Додаток Б
+Графічні матеріали
+
+Рисунок Б.1 - UML діаграма прецедентів 
+
+Рисунок Б.2 - Діаграма компонентів
+
+Рисунок Б.3 - Діаграма взаємодії
+
+Рисунок Б.4 - Діаграма станів
+
+
+Додаток В
+Програмний код
+
+В1.Аутентифікація та Реєстрація Користувачів
+
+// controllers/authController.js
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
+
+
+exports.register = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Username and password are required' });
+    }
+    const hashedPassword = await bcrypt.hash(password, 12); // Хешування пароля
+    const newUser = await User.create({ username, password: hashedPassword });
+    res.status(201).json({ message: 'User created successfully', userId: newUser.id });
+  } catch (error) {
+    res.status(500).json({ message: 'Error registering new user', error: error.message });
+  }
+};
+
+
+exports.login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const isMatch = await bcrypt.compare(password, user.password); // Порівняння хешованих паролів
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+    const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' }); // Генерація JWT
+    res.status(200).json({ message: 'Logged in successfully', token });
+  } catch (error) {
+    res.status(500).json({ message: 'Error logging in', error: error.message });
+  }
+};
+
+
+В2. Отримання Катастроф з Фільтрацією за Періодом
+
+
+// controllers/disasterController.js
+const { Disaster } = require('../models');
+const { Op, Sequelize } = require('sequelize');
+
+
+// Метод для отримання всіх катастроф
+exports.getAllDisasters = async (req, res) => {
+  try {
+    const { period = 'all' } = req.query;
+    let whereClause = {};
+
+
+    if (period !== 'all') { // Логіка фільтрації за періодом
+        const days = parseInt(period.replace('d', ''));
+        const date = new Date();
+        date.setDate(date.getDate() - days);
+        whereClause.createdAt = { [Op.gte]: date };
+    }
+   
+    const disasters = await Disaster.findAll({
+      where: whereClause,
+      order: [['createdAt', 'DESC']],
+    });
+    res.json(disasters);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching disasters', error });
+  }
+};
+
+
+В3. Отримання Сенсорних Даних для Катастрофи 
+
+
+// controllers/sensorController.js
+const { SensorData } = require('../models');
+
+
+// ... (getAllSensorData)
+
+
+exports.getSensorDataForDisaster = async (req, res) => {
+  try {
+    const { disasterId } = req.params;
+    const data = await SensorData.findAll({
+      where: { disasterId: disasterId },
+      order: [['createdAt', 'ASC']]
+    });
+    if (!data) {
+      return res.status(404).json({ message: 'No sensor data found for this disaster' });
+    }
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching sensor data', error });
+  }
+};
+В4.Визначення Стилів та Метрик для Подій
+
+
+// components/LiveEventFeed.js
+import React from 'react';
+
+
+const getSeverityStyles = (severity) => { // Бізнес-логіка: стилі за серйозністю
+    if (severity >= 5) return { backgroundColor: 'rgba(248, 81, 73, 0.1)', color: '#F85149' };
+    if (severity >= 4) return { backgroundColor: 'rgba(227, 179, 65, 0.1)', color: '#E3B341' };
+    if (severity >= 3) return { backgroundColor: 'rgba(88, 166, 255, 0.1)', color: '#58A6FF' };
+    return { backgroundColor: 'rgba(63, 185, 80, 0.1)', color: '#3FB950' };
+};
+
+
+const getPrimaryMetric = (disaster) => { // Бізнес-логіка: вибір основної метрики
+    if (!disaster.details) return `Severity: ${disaster.severity}`;
+    switch(disaster.type) {
+        case 'Earthquake': return `Mag: ${disaster.details.magnitude}`;
+        case 'Hurricane': return `Wind: ${disaster.details.max_wind_speed_kmh} km/h`;
+        case 'Flood': return `Level: ${disaster.details.water_level_m} m`;
+        case 'Wildfire': return `Temp: ${disaster.details.temperature_c}°C`;
+        default: return `Severity: ${disaster.severity}`;
+    }
+};
+
+
+// ... (EventCard component)
