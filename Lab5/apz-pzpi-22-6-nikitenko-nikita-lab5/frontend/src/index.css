@@ -1,0 +1,811 @@
+/* Змінні кореневого елемента */
+:root {
+    --bg-main: #0D1117; /* Трохи світліший темний фон */
+    --bg-secondary: #161B22; /* Для панелей та карток */
+    --bg-tertiary: #21262D; /* Для інтерактивних елементів */
+    --border-color: #30363D;
+    --text-primary: #E6EDF3; /* Світліший текст для контрасту */
+    --text-secondary: #7D8590;
+    --accent-blue: #58A6FF; /* Світліший синій */
+    --accent-red: #F85149;
+    --accent-yellow: #DAA520; /* Золотистий жовтий */
+    --accent-green: #3FB950;
+    --glass-bg: rgba(13, 17, 23, 0.7);
+    --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.2);
+    --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.3);
+    --shadow-strong: 0 12px 40px rgba(0, 0, 0, 0.4);
+  
+    /* Нові градієнти */
+    --gradient-blue: linear-gradient(135deg, #58A6FF 0%, #388BFD 100%);
+    --gradient-red: linear-gradient(135deg, #F85149 0%, #E0433E 100%);
+    --gradient-yellow: linear-gradient(135deg, #DAA520 0%, #C79100 100%);
+    --gradient-green: linear-gradient(135deg, #3FB950 0%, #2CA43C 100%);
+  }
+  
+  /* Базові стилі */
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    overflow-x: hidden; /* Запобігаємо горизонтальному скролу */
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  
+  #root {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Загальні стилі для контейнерів */
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .header {
+    background-color: var(--bg-secondary);
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-light);
+    z-index: 1000; /* Переконаємося, що хедер знаходиться поверх інших елементів */
+  }
+  
+  .header h1 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  
+  .header h1 span {
+    color: var(--accent-blue);
+  }
+  
+  .user-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .user-controls span {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+  
+  .logout-button {
+    background-color: var(--accent-red);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  
+  .logout-button:hover {
+    background-color: #e0433e;
+    transform: translateY(-2px);
+  }
+  
+  /* Стили для формы авторизации */
+  .auth-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: var(--bg-main);
+  }
+  
+  .auth-form {
+      background-color: var(--bg-secondary);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: var(--shadow-medium);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+  }
+  
+  .auth-form h2 {
+      color: var(--text-primary);
+      margin-bottom: 30px;
+      font-size: 2em;
+  }
+  
+  .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+  }
+  
+  .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-size: 0.9em;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="password"] {
+      width: calc(100% - 20px); /* Adjust for padding */
+      padding: 12px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-size: 1em;
+  }
+  
+  .form-group input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.3);
+  }
+  
+  .auth-button {
+      background-color: var(--accent-blue);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 10px;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  
+  .auth-button:hover {
+      background-color: #388BFD;
+      transform: translateY(-2px);
+  }
+  
+  .auth-form p {
+      color: var(--text-secondary);
+      margin-top: 25px;
+  }
+  
+  .auth-form p a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-weight: 500;
+  }
+  
+  .auth-form p a:hover {
+      text-decoration: underline;
+  }
+  
+  /* Dashboard Page */
+  .dashboard-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden; /* Important for full height map and sidebar */
+  }
+  
+  .main-content {
+      display: flex;
+      flex: 1; /* Allow main content to take remaining space */
+      overflow: hidden; /* Hide overflow from map or sidebar */
+  }
+  
+  .sidebar {
+      width: 350px;
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto; /* Enable scrolling for sidebar content */
+      padding-bottom: 20px; /* Add some padding at the bottom */
+      box-shadow: var(--shadow-medium);
+      z-index: 100; /* Ensure sidebar is above map */
+      display: flex;
+      flex-direction: column; /* Organize content vertically */
+  }
+  
+  .sidebar h2, .sidebar h3 {
+      color: var(--text-primary);
+      padding: 16px;
+      margin: 0;
+      border-bottom: 1px solid var(--border-color);
+  }
+  
+  .sidebar h3 {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+  }
+  
+  .map-details-section {
+      flex: 1;
+      position: relative; /* For positioning details panel */
+      display: flex;
+      flex-direction: column;
+  }
+  
+  .leaflet-container {
+      flex: 1; /* Make map fill available space */
+      height: 100%; /* Ensure map takes full height of its container */
+      background-color: var(--bg-main); /* Fallback background for map area */
+      z-index: 1; /* Ensure map is below sidebar and details panel */
+  }
+  
+  /* Details Panel */
+  .details-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 380px; /* Adjust width as needed */
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-strong);
+      z-index: 500; /* Higher than sidebar, lower than loader */
+      padding: 20px;
+      overflow-y: auto; /* Enable scrolling for details */
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+  }
+  
+  .details-panel h2 {
+      color: var(--accent-blue);
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.8em;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+  }
+  
+  .details-panel .close-panel-button {
+      background-color: var(--text-secondary);
+      align-self: flex-start; /* Align button to the start */
+      margin-top: 10px;
+      padding: 8px 15px;
+      font-size: 0.9em;
+  }
+  
+  .details-panel .close-panel-button:hover {
+      background-color: #6a737d;
+  }
+  
+  /* Disaster Details */
+  .disaster-details {
+      flex: 1; /* Allow details to grow */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      color: var(--text-primary);
+  }
+  
+  .no-details-message {
+      color: var(--text-secondary);
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+  }
+  
+  .details-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+  }
+  
+  .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+  }
+  
+  .detail-item:last-child {
+      border-bottom: none;
+  }
+  
+  .detail-icon {
+      color: var(--accent-blue);
+      font-size: 1.1em;
+      width: 20px; /* Фіксована ширина для іконки */
+      text-align: center;
+  }
+  
+  .detail-key {
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-width: 100px; /* Фіксована ширина для ключа */
+  }
+  
+  .detail-value {
+      flex: 1;
+      color: var(--text-primary);
+  }
+  
+  .details-subheader {
+      color: var(--accent-yellow);
+      margin-top: 20px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 5px;
+  }
+  
+  /* Global Stats */
+  .global-stats {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+  }
+  
+  .global-stats h2 {
+      margin-top: 0;
+      padding-bottom: 10px;
+      border-bottom: none; /* Removed duplicate border */
+      color: var(--text-primary);
+      font-size: 1.4rem;
+  }
+  
+  .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+  }
+  
+  .stat-item {
+      background-color: var(--bg-tertiary);
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-light);
+  }
+  
+  .stat-item .value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--accent-blue);
+      margin-bottom: 5px;
+  }
+  
+  .stat-item .label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+  }
+  
+  /* Global Threat Level */
+  .global-threat-container {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+  }
+  
+  .global-threat-container h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      padding: 0;
+      border-bottom: none;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+  }
+  
+  .threat-gauge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+  }
+  
+  .threat-level-text {
+      font-size: 1.7rem;
+      font-weight: bold;
+      text-shadow: 0 0 8px rgba(255,255,255,0.1);
+  }
+  
+  .gauge-bar-background {
+      width: 100%;
+      height: 12px;
+      background-color: var(--bg-tertiary);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+  }
+  
+  .gauge-bar-foreground {
+      height: 100%;
+      border-radius: 6px;
+      /* transition handled by framer-motion, but these are fallback/initial */
+      /* Dynamically set background-color via inline style or CSS variable based on threat level */
+  }
+  
+  /* CSS для градієнтів загрози */
+  .gauge-bar-foreground[style*="rgb(63, 185, 80)"] { /* Green */
+      background: var(--gradient-green) !important;
+  }
+  .gauge-bar-foreground[style*="rgb(88, 166, 255)"] { /* Blue */
+      background: var(--gradient-blue) !important;
+  }
+  .gauge-bar-foreground[style*="rgb(218, 165, 32)"] { /* Yellow */
+      background: var(--gradient-yellow) !important;
+  }
+  .gauge-bar-foreground[style*="rgb(248, 81, 73)"] { /* Red */
+      background: var(--gradient-red) !important;
+  }
+  
+  
+  .threat-score-value {
+      font-size: 0.9em;
+      color: var(--text-secondary);
+      font-weight: 500;
+  }
+  
+  /* Time Filter */
+  .time-filter-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+  }
+  
+  .time-filter-button {
+      background-color: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9em;
+      font-weight: 500;
+      transition: all 0.2s ease;
+  }
+  
+  .time-filter-button:hover {
+      background-color: #2b323b;
+      color: var(--text-primary);
+  }
+  
+  .time-filter-button.active {
+      background-color: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 10px rgba(88, 166, 255, 0.4);
+  }
+  
+  /* Filters (by Type) */
+  .filters {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+  }
+  
+  .filters h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      padding: 0;
+      border-bottom: none;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+  }
+  
+  .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+  }
+  
+  .filter-button {
+      background-color: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+  }
+  
+  .filter-button:hover {
+      background-color: #2b323b;
+      color: var(--text-primary);
+  }
+  
+  .filter-button.active {
+      background-color: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+  }
+  
+  /* Live Event Feed */
+  .event-feed {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 400px; /* Обмеження висоти для прокрутки */
+      overflow-y: auto; /* Дозволяє прокрутку */
+  }
+  
+  /* Скролбар для Live Event Feed */
+  .event-feed::-webkit-scrollbar {
+      width: 8px;
+  }
+  
+  .event-feed::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+  }
+  
+  .event-feed::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 10px;
+  }
+  
+  .event-feed::-webkit-scrollbar-thumb:hover {
+      background: var(--text-secondary);
+  }
+  
+  
+  .event-feed h3 {
+      margin-bottom: 15px;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+  }
+  
+  .event-card {
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 15px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-light);
+  }
+  
+  .event-card:hover {
+      background-color: #2b323b;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+  }
+  
+  .event-card.selected {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 12px rgba(88, 166, 255, 0.5);
+      background-color: #1a222c; /* Трохи темніший фон при виборі */
+  }
+  
+  .event-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+  }
+  
+  .event-card-header h3 {
+      margin: 0;
+      font-size: 1.1em;
+      color: var(--text-primary);
+  }
+  
+  .severity-badge {
+      background-color: var(--accent-red); /* Default */
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75em;
+      font-weight: bold;
+      text-transform: uppercase;
+  }
+  
+  .event-card-time {
+      font-size: 0.8em;
+      color: var(--text-secondary);
+  }
+  
+  /* Related Events (inside DisasterDetails) */
+  .related-events-container {
+      margin-top: 20px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+  }
+  
+  .related-events-container h4 {
+      color: var(--text-primary);
+      margin-bottom: 15px;
+      font-size: 1.2em;
+  }
+  
+  .related-events-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+  }
+  
+  .related-event-item {
+      background-color: var(--bg-tertiary);
+      padding: 10px 15px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+  }
+  
+  .related-event-item:hover {
+      background-color: #2b323b;
+      transform: translateX(3px);
+  }
+  
+  .related-date {
+      font-size: 0.85em;
+      color: var(--text-secondary);
+  }
+  
+  .related-severity {
+      font-weight: 600;
+      color: var(--accent-blue);
+      font-size: 0.9em;
+  }
+  
+  .no-events-message {
+      font-style: italic;
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 10px 0;
+  }
+  
+  /* Sensor Data Chart */
+  .sensor-data-chart-container {
+      margin-top: 20px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+  }
+  
+  .sensor-data-chart-container h4 {
+      color: var(--text-primary);
+      margin-bottom: 15px;
+      font-size: 1.2em;
+  }
+  
+  .sensor-data-chart-container .error-message {
+      color: var(--accent-red);
+      text-align: center;
+      padding: 15px;
+      background-color: rgba(248, 81, 73, 0.1);
+      border-radius: 5px;
+      margin-top: 10px;
+  }
+  
+  /* Notification Toast */
+  .notification-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000; /* Highest z-index */
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  .toast {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: var(--shadow-medium);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      min-width: 280px;
+      max-width: 350px;
+      opacity: 1;
+      transform: translateX(0);
+      transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  }
+  
+  .toast.exiting {
+      opacity: 0;
+      transform: translateX(100%);
+  }
+  
+  .toast-icon {
+      font-size: 1.8em;
+      color: var(--accent-yellow); /* Default for notifications */
+  }
+  
+  .toast-icon.new-event {
+      color: var(--accent-red); /* For new disaster events */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+      .main-content {
+          flex-direction: column;
+      }
+  
+      .sidebar {
+          width: 100%;
+          max-height: 500px; /* Обмежте висоту сайдбару на малих екранах */
+          border-right: none;
+          border-bottom: 1px solid var(--border-color);
+          order: 2; /* Перемістити сайдбар нижче карти */
+          box-shadow: none; /* Прибираємо тінь, якщо не потрібно */
+      }
+  
+      .map-details-section {
+          order: 1; /* Перемістити карту вище сайдбару */
+          min-height: 400px; /* Мінімальна висота для карти на мобільних */
+      }
+  
+      .details-panel {
+          width: 100%;
+          height: auto; /* Автоматична висота для вмісту */
+          position: relative; /* Щоб не виходила за межі, якщо є скрол */
+          transform: translateX(0) !important; /* Прибираємо анімацію Framer Motion на малих екранах */
+          box-shadow: none; /* Прибираємо тінь, якщо не потрібно */
+          border-left: none;
+          border-top: 1px solid var(--border-color);
+      }
+  
+      .notification-container {
+          top: 10px;
+          right: 10px;
+          left: 10px; /* Центруємо на мобільних */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+      }
+  
+      .toast {
+          width: calc(100% - 40px); /* Adjust width for smaller screens */
+          padding: 15px 20px;
+          gap: 15px;
+      }
+  
+      .toast.exiting {
+          transform: translateX(0); /* Анімація зникнення може бути іншою на мобільних */
+          opacity: 0;
+      }
+  }
+  
+  @media (max-width: 768px) {
+      .header {
+          flex-direction: column;
+          gap: 10px;
+      }
+      .user-controls {
+          width: 100%;
+          justify-content: center;
+      }
+      .auth-form {
+          padding: 25px;
+      }
+      .auth-form h2 {
+          font-size: 1.5em;
+      }
+  }

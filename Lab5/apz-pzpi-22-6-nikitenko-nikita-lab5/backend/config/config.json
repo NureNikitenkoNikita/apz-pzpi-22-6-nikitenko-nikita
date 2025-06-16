@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "monitor_admin",
+    "password": "XXXX",
+    "database": "disaster_monitoring",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
