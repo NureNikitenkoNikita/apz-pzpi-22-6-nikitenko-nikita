@@ -98,7 +98,7 @@
 Програмний код
 
 В.1 Математична обробка прикладних даних
-
+GitHub репозиторій: https://github.com/NureNikitenkoNikita/apz-pzpi-22-6-nikitenko-nikita/blob/main/Lab4/apz-pzpi-22-6-nikitenko-nikita-lab4/controllers/disasterController.js
 
 // Метод для пошуку схожих подій
 exports.getSimilarDisasters = async (req, res) => {
